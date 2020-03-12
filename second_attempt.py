@@ -42,17 +42,17 @@ print(hrefs)
 print(numbers)
 driver.quit()
 
-p = webdriver.Firefox(
-    executable_path='/home/tatiana/Рабочий стол/geckodriver/geckodriver-v0.26.0-linux64/geckodriver')
-# print(hrefs[0])
-p.get(hrefs[0])
-
-elements = WebDriverWait(driver, 10).until(
-    EC.presence_of_element_located((By.CLASS_NAME, "field-value"))
-)
-
-p.page_source
-
-p.quit()
+# p = webdriver.Firefox(
+#     executable_path='/home/tatiana/Рабочий стол/geckodriver/geckodriver-v0.26.0-linux64/geckodriver')
+# # print(hrefs[0])
+# p.get(hrefs[0])
+#
+# elements = WebDriverWait(driver, 10).until(
+#     EC.presence_of_element_located((By.CLASS_NAME, "field-value"))
+# )
+#
+# p.page_source
+#
+# p.quit()
 
 
