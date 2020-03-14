@@ -37,15 +37,19 @@ def pagination(driver):
 def data_first_page(date, driver):
     count = 0
     times, contents, hrefs = [], [], []
-
+    data_firsts = []
     for option in driver.find_elements_by_class_name("publication-info"):
 
         date_1 = datetime.datetime.strptime(option.text[:10], '%d.%m.%Y')
         date_2 = datetime.datetime.strptime(date, '%d.%m.%Y')
-        if (date_1 - date_2).days <= 14 and (date_1 - date_2).days >= 0 and count < 1:
-            times.append(option.text[:10])
 
-            contents.append(driver.find_elements_by_class_name("list-col-highlighted")[count].text)
+        if (date_1 - date_2).days <= 14 and (date_1 - date_2).days >= 0:
+            data_first = []
+            data_first.append(driver.find_elements_by_class_name("list-col-highlighted")[count].text)
+            data_first.append(driver.find_element_by_link_text(
+                driver.find_elements_by_class_name("list-col-highlighted")[count].text).get_attribute("href"))
+            data_first.append(option.text[:10])
+            data_firsts.append(data_first)
 
             hrefs.append(driver.find_element_by_link_text(
                 driver.find_elements_by_class_name("list-col-highlighted")[count].text).get_attribute("href"))
@@ -53,53 +57,48 @@ def data_first_page(date, driver):
             count += 1
 
     driver.quit()
-    return times, contents, hrefs, count
+
+    return data_firsts, hrefs, count
 
 
 def data_second_page(count, hrefs):
-    betrifft, rubrik, unterrubrik, veröffentlichungsdatum, \
-    publizierende_stelle, meldungsnummer, sprache, kanton = [], [], [], [], [], [], [], []
     i = 0
+    data_seconds = []
     while i < count:
         driver = web_driver(hrefs[i])
         WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.CLASS_NAME, "field-value"))
         )
-        betrifft.append(driver.find_element_by_class_name("field-value").text)
+        data_second = []
+        data_second.append(driver.find_element_by_class_name("field-value").text)
         date = (driver.find_elements_by_tag_name("dd"))
-        rubrik.append(date[0].text)
-        unterrubrik.append(date[1].text)
-        veröffentlichungsdatum.append(date[2].text)
-        publizierende_stelle.append(date[3].text)
-        meldungsnummer.append(date[4].text)
-        sprache.append(date[5].text)
-        kanton.append(date[6].text)
+        j = 0
+        while j < len(date):
+            data_second.append(date[i].text)
+            j += 1
+        data_seconds.append(data_second)
 
         driver.quit()
         i += 1
-    return betrifft, rubrik, unterrubrik, veröffentlichungsdatum, \
-           publizierende_stelle, meldungsnummer, sprache, kanton
+
+    return data_seconds
 
 
-def data_editing(contents, hrefs, times, rubrik, unterrubrik, veröffentlichungsdatum, publizierende_stelle,
-                 meldungsnummer, sprache, kanton):
-    myData = [["content", "href", "time", "rubrik", "unterrubrik", "veröffentlichungsdatum", "publizierende_stelle",
+def data_editing(data_first, data_second):
+    myData = [["content", "href", "time", "betrifft", "rubrik", "unterrubrik", "veröffentlichungsdatum",
+               "publizierende_stelle",
                "meldungsnummer", "sprache", "kanton"]]
-
     i = 0
-    while i < len(times):
+    while i < len(data_first):
         data = []
-        data.append(contents[i])
-        data.append(hrefs[i])
-        data.append(times[i])
-        data.append(rubrik[i])
-        data.append(unterrubrik[i])
-        data.append(veröffentlichungsdatum[i])
-        data.append(publizierende_stelle[i])
-        data.append(meldungsnummer[i])
-        data.append(sprache[i])
-        data.append(kanton[i])
+
+        for n in data_first[i]:
+            data.append(n)
+        for j in data_second[i]:
+            data.append(j)
+
         myData.append(data)
+
         i += 1
     myFile = open('data.csv', 'w')
     with myFile:
@@ -115,12 +114,11 @@ def main():
     )
     pagination(driver)
     date = ((datetime.date.today() + datetime.timedelta(days=-14)).strftime("%d.%m.%Y"))
+    data_first, hrefs, count = data_first_page(date, driver)
 
-    times, contents, hrefs, count = data_first_page(date, driver)
-    betrifft, rubrik, unterrubrik, veröffentlichungsdatum, \
-    publizierende_stelle, meldungsnummer, sprache, kanton = data_second_page(count, hrefs)
-    data_editing(contents, hrefs, times, rubrik, unterrubrik, veröffentlichungsdatum, publizierende_stelle,
-                 meldungsnummer, sprache, kanton)
+    data_second = data_second_page(count, hrefs)
+
+    data_editing(data_first, data_second)
 
 
 if __name__ == "__main__":
