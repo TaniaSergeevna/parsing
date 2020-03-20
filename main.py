@@ -74,6 +74,11 @@ def transformations2(urls):
         data_page.append(' ')
         data_page.append(' ')
 
+        data_page.append(' ')
+        data_page.append(' ')
+        data_page.append(' ')
+
+
         # bh_lat=
         # data2
         try:
@@ -174,7 +179,7 @@ def transformations(urls, data):
         for j in data[i]:
             data_page.append(j)
         # break
-
+        print(len(data_page))
         data_pages.append(data_page)
 
         i += 1
@@ -187,7 +192,7 @@ def transformations(urls, data):
 # 'pv_lat',
 # 'construction', 'con_plot', 'con_street', 'lon','lat','zone', 'exception','coord'
 def add_csv(data):
-    name = ['canton', 'url', 'amtsblatt', 'date', 'type', 'content', 'municipality', 'number', 'bauherr', 'bh_name',
+    name = ['canton', 'url', 'date', 'type', 'content', 'municipality', 'number', 'bauherr', 'bh_name',
             'bh_address', 'bh_street', 'bh_number',
             'bh_place', 'bh_plz', 'bh_lon', 'bh_lat', 'projektverfasser', 'pv_address', 'pv_name', 'pv_street',
             'pv_number', 'pv_place', 'pv_plz', 'pv_lon',
