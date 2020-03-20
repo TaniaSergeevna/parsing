@@ -22,9 +22,9 @@ def add_href(url, date):
         if (date_1 - date_2).days <= 14 and (date_1 - date_2).days >= 0:
             href.append('https://amtsblatt.be.ch/api/v1/publications/{0}'.format(a['id']))
             href_view.append('https://amtsblatt.be.ch/api/v1/publications/{0}/view'.format(a['id']))
-    datas = transformations2(href_view)
+    data = transformations2(href_view)
 
-    return href, datas
+    return href, data
 
 
 def replaces(string):
@@ -32,7 +32,7 @@ def replaces(string):
                                                                                                     '').replace(
         '<br/>',
         '   ').replace('<br />', '   ').replace('\u200b', '').replace('\u200b', '')
-    # print(string)
+
     return string
 
 
@@ -60,7 +60,6 @@ def transformations2(urls):
             data_page.append(bh_place[bh_place.find(' ') + 1:])
             data_page.append(bh_place[:bh_place.find(' ')])
 
-
         else:
             bh_street = str(bh_adress[:bh_adress.find(',')]).strip()
             data_page.append(bh_street[:bh_street.rfind(' ')])
@@ -71,12 +70,12 @@ def transformations2(urls):
             data_page.append(bh_place[:bh_place.find(' ')])
 
         # bh_lon=
+
         data_page.append(' ')
         data_page.append(' ')
-
-
-
-
+        # bh_lan,bh_lon = extract_lat_long_via_address(url)
+        # print(url)
+        # print(bh_lan,bh_lon)
         # bh_lat=
         # data2
         try:
@@ -147,7 +146,6 @@ def transformations2(urls):
         data_page.append(' ')
         data_page.append(' ')
 
-
         data_pages.append(data_page)
 
     return data_pages
@@ -165,7 +163,6 @@ def municipality(string):
 
 def transformations(urls, data):
     data_pages = []
-    print(data)
     i = 0
     for url in urls:
         data_page = []
@@ -182,7 +179,6 @@ def transformations(urls, data):
         for j in data[i]:
             data_page.append(j)
         # break
-        print(len(data_page))
         data_pages.append(data_page)
 
         i += 1
