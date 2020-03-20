@@ -10,7 +10,7 @@ def get_html(url):
 
 
 def add_href(url, date):
-    href = []
+    href, href_view = [], []
     datas = url["content"]
     date_2 = datetime.datetime.strptime(date, '%d.%m.%Y')
     for data in datas:
@@ -21,36 +21,176 @@ def add_href(url, date):
 
         if (date_1 - date_2).days <= 14 and (date_1 - date_2).days >= 0:
             href.append('https://amtsblatt.be.ch/api/v1/publications/{0}'.format(a['id']))
+            href_view.append('https://amtsblatt.be.ch/api/v1/publications/{0}/view'.format(a['id']))
+    datas = transformations2(href_view)
 
-    return href
+    return href, datas
 
 
-def transformations(urls):
+def replaces(string):
+    string = str(string).replace('<div>', '').replace('<strong>', '').replace('</div>', '').replace('</strong>',
+                                                                                                    '').replace(
+        '<br/>',
+        '   ').replace('<br />', '   ').replace('\u200b', '').replace('\u200b', '')
+    # print(string)
+    return string
+
+
+def transformations2(urls):
     data_pages = []
+
+    for url in urls:
+        data_page = []
+        datas = get_html(url)['fields']
+
+        data_page.append(str(replaces(datas[1]['fields'][0]['fields'][0]['value']['defaultValue'])))
+
+        bh_name = str(replaces(datas[1]['fields'][0]['fields'][0]['value']['defaultValue']))
+        data_page.append(bh_name[:bh_name.find('   ')])
+        bh_adress = bh_name[bh_name.find('   ') + 3:].replace('   ', ',')
+        data_page.append(bh_adress)
+
+        if bh_adress.count(',') == 2:
+            bh_street = str(bh_adress[bh_adress.find(',') + 1:])[
+                        :str(bh_adress[bh_adress.find(',') + 1:]).find(',')].strip()
+            data_page.append(bh_street[:bh_street.rfind(' ')])
+            data_page.append(bh_street[bh_street.rfind(' '):])
+            bh_place = str(bh_adress[bh_adress.find(',') + 1:])[
+                       str(bh_adress[bh_adress.find(',') + 1:]).find(',') + 1:].strip()
+            data_page.append(bh_place[bh_place.find(' ') + 1:])
+            data_page.append(bh_place[:bh_place.find(' ')])
+
+
+        else:
+            bh_street = str(bh_adress[:bh_adress.find(',')]).strip()
+            data_page.append(bh_street[:bh_street.rfind(' ')])
+            data_page.append(bh_street[bh_street.rfind(' '):])
+            bh_place = str(bh_adress[bh_adress.find(',') + 1:])[
+                       str(bh_adress[bh_adress.find(',') + 1:]).find(',') + 1:].strip()
+            data_page.append(bh_place[bh_place.find(' ') + 1:])
+            data_page.append(bh_place[:bh_place.find(' ')])
+
+        # bh_lon=
+        data_page.append(' ')
+        data_page.append(' ')
+
+        # bh_lat=
+        # data2
+        try:
+            data_page.append(str(replaces(datas[2]['fields'][0]['fields'][0]['value']['defaultValue'])))
+
+            bh_name = str(replaces(datas[2]['fields'][0]['fields'][0]['value']['defaultValue']))
+            data_page.append(bh_name[:bh_name.find('   ')])
+            bh_adress = bh_name[bh_name.find('   ') + 3:].replace('   ', ',')
+            data_page.append(bh_adress)
+
+            if bh_adress.count(',') == 2:
+                bh_street = str(bh_adress[bh_adress.find(',') + 1:])[
+                            :str(bh_adress[bh_adress.find(',') + 1:]).find(',')].strip()
+                data_page.append(bh_street[:bh_street.rfind(' ')])
+                data_page.append(bh_street[bh_street.rfind(' '):])
+                bh_place = str(bh_adress[bh_adress.find(',') + 1:])[
+                           str(bh_adress[bh_adress.find(',') + 1:]).find(',') + 1:].strip()
+                data_page.append(bh_place[bh_place.find(' ') + 1:])
+                data_page.append(bh_place[:bh_place.find(' ')])
+
+
+            else:
+                bh_street = str(bh_adress[:bh_adress.find(',')]).strip()
+                data_page.append(bh_street[:bh_street.rfind(' ')])
+                data_page.append(bh_street[bh_street.rfind(' '):])
+                bh_place = str(bh_adress[bh_adress.find(',') + 1:])[
+                           str(bh_adress[bh_adress.find(',') + 1:]).find(',') + 1:].strip()
+                data_page.append(bh_place[bh_place.find(' ') + 1:])
+                data_page.append(bh_place[:bh_place.find(' ')])
+        except:
+
+            data_page.append('')
+            data_page.append('')
+            data_page.append('')
+            data_page.append('')
+            data_page.append('')
+            data_page.append('')
+            data_page.append('')
+
+        # pv_lon=
+        data_page.append(' ')
+        data_page.append(' ')
+
+        # pv_lat=
+
+        try:
+            data_page.append(replaces(datas[3]['fields'][0]['value']['defaultValue']))
+        except:
+            data_page.append(' ')
+
+        try:
+            data_page.append(replaces(datas[3]['fields'][2]['value']['defaultValue']))
+        except:
+            data_page.append(' ')
+
+        try:
+            data_page.append(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
+                             :str(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])).find(',')])
+        except:
+            data_page.append(' ')
+
+        # lon
+        data_page.append(' ')
+        data_page.append(' ')
+
+        # lat
+
+        data_pages.append(data_page)
+    return data_pages
+
+
+def content(string):
+    string = str(string)[str(string).find(',') + 1:]
+    return string
+
+
+def municipality(string):
+    string = str(string)[:str(string).find('-')]
+    return string
+
+
+def transformations(urls, data):
+    data_pages = []
+    print(data)
+    i = 0
     for url in urls:
         data_page = []
         datas = get_html(url)['meta']
-        data_page.append(datas['rubric'][:2])
-        data_page.append(str(datas['publicationDate'][:10]).replace('-', '.'))
-        registrationOffice = datas['registrationOffice']
-
-        data_page.append(registrationOffice['displayName'])
-        data_page.append(registrationOffice['street'])
-        data_page.append(registrationOffice['town'])
-        data_page.append(registrationOffice['streetNumber'])
-
-        data_page.append(datas['publicationNumber'])
-
         data_page.append(datas['cantons'][0])
 
+        data_page.append('https://amtsblatt.be.ch/#!/search/publications/detail/{0}'.format(datas['id']))
+
+        data_page.append(str(datas['publicationDate'][:10]).replace('-', '/'))
+        data_page.append('Baupublikation')
+        data_page.append('Betrifft:{0}'.format(content(datas['title']['de'])))
+        data_page.append(datas['registrationOffice']['displayName'])
+        data_page.append(datas['publicationNumber'])
+        # break
+
         data_pages.append(data_page)
+        data_pages.append(data[i])
+        i += 1
 
     return data_pages
 
 
+# 'canton', 'url', 'amtsblatt', 'date','type', 'content', 'municipality', 'number', 'bauherr', 'bh_name', 'bh_address', 'bh_street', 'bh_number',
+# 'bh_place', 'bh_plz','bh_lon', 'bh_lat', 'projektverfasser', 'pv_address', 'pv_name', 'pv_street', 'pv_number', 'pv_place', 'pv_plz','pv_lon',
+# 'pv_lat',
+# 'construction', 'con_plot', 'con_street', 'lon','lat','zone', 'exception','coord'
 def add_csv(data):
-    name = ['rubric', 'publicationDate','displayName', 'street', 'town', 'streetNumber', 'publicationNumber',
-            'cantons']
+    name = ['canton', 'url', 'amtsblatt', 'date', 'type', 'content', 'municipality', 'number', 'bauherr', 'bh_name',
+            'bh_address', 'bh_street', 'bh_number',
+            'bh_place', 'bh_plz', 'bh_lon', 'bh_lat', 'projektverfasser', 'pv_address', 'pv_name', 'pv_street',
+            'pv_number', 'pv_place', 'pv_plz', 'pv_lon',
+            'pv_lat',
+            'construction', 'con_plot', 'con_street', 'lon', 'lat', 'zone', 'exception', 'coord']
     data[0].insert(0, name)
     file = open('example.csv', 'w')
     with file:
@@ -65,13 +205,12 @@ def main():
     ]
     # pagination
     for page in range(number_page):
-        data.append(transformations(
-            add_href(
-                get_html(
-                    'https://amtsblatt.be.ch/api/v1/publications?allowRubricSelection=true&includeContent=false&pageRequest.page={0}&pageRequest.size=100&publicationStates=PUBLISHED&publicationStates=CANCELLED&rubrics=BP-BE&subRubrics=BP-BE10&subRubrics=BP-BE20&tenant=kabbe'.format(
-                        page)),
-                date)
-        ))
+        url, datas = add_href(
+            get_html(
+                'https://amtsblatt.be.ch/api/v1/publications?allowRubricSelection=true&includeContent=false&pageRequest.page={0}&pageRequest.size=100&publicationStates=PUBLISHED&publicationStates=CANCELLED&rubrics=BP-BE&subRubrics=BP-BE10&subRubrics=BP-BE20&tenant=kabbe'.format(
+                    page)),
+            date)
+        data.append(transformations(url, datas))
 
     add_csv(data)
 
@@ -85,3 +224,6 @@ if __name__ == "__main__":
 
 # Request URL: https://amtsblatt.be.ch/api/v1/publications/f24150a0-5aae-4bb2-a315-5d7916cd8233
 # Request URL: https://amtsblatt.be.ch/api/v1/publications/62a38883-0d47-4cb2-9bff-50c07be797db
+# https://amtsblatt.be.ch/#!/search/publications/detail/
+
+# https://amtsblatt.be.ch/api/v1/publications/9441414e-1c21-499b-87df-44f472934e70/view
