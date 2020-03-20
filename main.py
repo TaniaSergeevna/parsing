@@ -171,10 +171,12 @@ def transformations(urls, data):
         data_page.append('Betrifft:{0}'.format(content(datas['title']['de'])))
         data_page.append(datas['registrationOffice']['displayName'])
         data_page.append(datas['publicationNumber'])
+        for j in data[i]:
+            data_page.append(j)
         # break
 
         data_pages.append(data_page)
-        data_pages.append(data[i])
+
         i += 1
 
     return data_pages
