@@ -74,9 +74,7 @@ def transformations2(urls):
         data_page.append(' ')
         data_page.append(' ')
 
-        data_page.append(' ')
-        data_page.append(' ')
-        data_page.append(' ')
+
 
 
         # bh_lat=
@@ -145,8 +143,13 @@ def transformations2(urls):
         data_page.append(' ')
 
         # lat
+        data_page.append(' ')
+        data_page.append(' ')
+        data_page.append(' ')
+
 
         data_pages.append(data_page)
+
     return data_pages
 
 
