@@ -126,14 +126,17 @@ def transformations2(urls):
 
         try:
             geolocator = Nominatim()
-            loc = geolocator.geocode(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
+            try:
+                loc = geolocator.geocode(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
                                          str(replaces(
                                              datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])).find(
-                                             ',')+1:])
-            # loc = geolocator.geocode((replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
-            #                              :str(replaces(
-            #                                  datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])).find(
-            #                                  ',')]))
+                                             ',') + 1:])
+            except:
+
+                loc = geolocator.geocode((replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
+                                          :str(replaces(
+                                              datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])).find(
+                                              ',')]))
 
             data_page.append(loc.longitude)
             data_page.append(loc.latitude)
