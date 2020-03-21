@@ -143,20 +143,20 @@ def transformations2(urls):
                                          ',')])
             # print("latitude is :-", loc.latitude, "\nlongtitude is:-", loc.longitude)
 
-            data_page.append(loc.longitude)
-            data_page.append(loc.latitude)
+            # data_page.append(loc.longitude)
+            # data_page.append(loc.latitude)
         except:
             data_page.append(' ')
 
-            data_page.append(' ')
-            data_page.append(' ')
+            # data_page.append(' ')
+            # data_page.append(' ')
 
 
 
         # lon
 
-        # data_page.append(' ')
-        # data_page.append(' ')
+        data_page.append(' ')
+        data_page.append(' ')
         # lat
 
         data_page.append(' ')
