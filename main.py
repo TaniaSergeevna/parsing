@@ -60,13 +60,9 @@ def add_date(string):
 
         geolocator = Nominatim()
         loc = geolocator.geocode(bh_place[bh_place.find(' ') + 1:])
-        # print("latitude is :-", loc.latitude, "\nlongtitude is:-", loc.longitude)
 
         data_page.append(loc.longitude)
         data_page.append(loc.latitude)
-
-
-
 
     else:
         bh_street = str(bh_adress[:bh_adress.find(',')]).strip()
@@ -80,7 +76,6 @@ def add_date(string):
 
         geolocator = Nominatim()
         loc = geolocator.geocode(bh_place[bh_place.find(' ') + 1:])
-        # print("latitude is :-", loc.latitude, "\nlongtitude is:-", loc.longitude)
 
         data_page.append(loc.longitude)
         data_page.append(loc.latitude)
@@ -90,18 +85,12 @@ def add_date(string):
 
 def transformations2(urls):
     data_pages = []
-
     for url in urls:
         data_page = []
         datas = get_html(url)['fields']
 
         for i in add_date(datas[1]['fields'][0]['fields'][0]['value']['defaultValue']):
             data_page.append(i)
-
-        # bh_lon=
-        # data_page.append(' ')
-        # data_page.append(' ')
-        # bh_lat=
 
         # data2
         try:
@@ -118,11 +107,6 @@ def transformations2(urls):
 
             data_page.append(' ')
             data_page.append(' ')
-
-        # pv_lon=
-        # data_page.append(' ')
-        # data_page.append(' ')
-        # pv_lat=
 
         try:
             data_page.append(replaces(datas[3]['fields'][0]['value']['defaultValue']))
@@ -143,19 +127,20 @@ def transformations2(urls):
         try:
             geolocator = Nominatim()
             loc = geolocator.geocode(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
-                                     :str(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])).find(
-                                         ',')])
+                                         str(replaces(
+                                             datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])).find(
+                                             ',')+1:])
+            # loc = geolocator.geocode((replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
+            #                              :str(replaces(
+            #                                  datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])).find(
+            #                                  ',')]))
 
             data_page.append(loc.longitude)
             data_page.append(loc.latitude)
+
         except:
             data_page.append(' ')
             data_page.append(' ')
-
-        # lon
-        # data_page.append(' ')
-        # data_page.append(' ')
-        # lat
 
         data_page.append('  ')
         data_page.append('  ')
