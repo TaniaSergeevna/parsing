@@ -192,10 +192,6 @@ def transformations(urls, data):
     return data_pages
 
 
-# 'canton', 'url', 'amtsblatt', 'date','type', 'content', 'municipality', 'number', 'bauherr', 'bh_name', 'bh_address', 'bh_street', 'bh_number',
-# 'bh_place', 'bh_plz','bh_lon', 'bh_lat', 'projektverfasser', 'pv_address', 'pv_name', 'pv_street', 'pv_number', 'pv_place', 'pv_plz','pv_lon',
-# 'pv_lat',
-# 'construction', 'con_plot', 'con_street', 'lon','lat','zone', 'exception','coord'
 def add_csv(data):
     name = ['canton', 'url', 'date', 'type', 'content', 'municipality', 'number', 'bauherr', 'bh_name',
             'bh_address', 'bh_street', 'bh_number',
