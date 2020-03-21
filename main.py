@@ -119,7 +119,6 @@ def transformations2(urls):
             data_page.append(' ')
             data_page.append(' ')
 
-
         # pv_lon=
         # data_page.append(' ')
         # data_page.append(' ')
@@ -138,13 +137,26 @@ def transformations2(urls):
         try:
             data_page.append(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
                              :str(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])).find(',')])
+            geolocator = Nominatim()
+            loc = geolocator.geocode(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
+                                     :str(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])).find(
+                                         ',')])
+            # print("latitude is :-", loc.latitude, "\nlongtitude is:-", loc.longitude)
+
+            data_page.append(loc.longitude)
+            data_page.append(loc.latitude)
         except:
             data_page.append(' ')
 
+            data_page.append(' ')
+            data_page.append(' ')
+
+
+
         # lon
 
-        data_page.append(' ')
-        data_page.append(' ')
+        # data_page.append(' ')
+        # data_page.append(' ')
         # lat
 
         data_page.append(' ')
