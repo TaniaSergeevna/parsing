@@ -2,6 +2,7 @@ import datetime
 
 import requests
 import csv
+from geopy.geocoders import Nominatim
 
 
 def get_html(url):
@@ -54,17 +55,35 @@ def add_date(string):
         bh_place = str(bh_adress[bh_adress.find(',') + 1:])[
                    str(bh_adress[bh_adress.find(',') + 1:]).find(',') + 1:].strip()
         data_page.append(bh_place[bh_place.find(' ') + 1:])
+
         data_page.append(bh_place[:bh_place.find(' ')])
+
+        geolocator = Nominatim()
+        loc = geolocator.geocode(bh_place[bh_place.find(' ') + 1:])
+        # print("latitude is :-", loc.latitude, "\nlongtitude is:-", loc.longitude)
+
+        data_page.append(loc.longitude)
+        data_page.append(loc.latitude)
+
+
 
 
     else:
         bh_street = str(bh_adress[:bh_adress.find(',')]).strip()
+
         data_page.append(bh_street[:bh_street.rfind(' ')])
         data_page.append(bh_street[bh_street.rfind(' '):])
         bh_place = str(bh_adress[bh_adress.find(',') + 1:])[
                    str(bh_adress[bh_adress.find(',') + 1:]).find(',') + 1:].strip()
         data_page.append(bh_place[bh_place.find(' ') + 1:])
         data_page.append(bh_place[:bh_place.find(' ')])
+
+        geolocator = Nominatim()
+        loc = geolocator.geocode(bh_place[bh_place.find(' ') + 1:])
+        # print("latitude is :-", loc.latitude, "\nlongtitude is:-", loc.longitude)
+
+        data_page.append(loc.longitude)
+        data_page.append(loc.latitude)
 
     return data_page
 
@@ -80,8 +99,8 @@ def transformations2(urls):
             data_page.append(i)
 
         # bh_lon=
-        data_page.append(' ')
-        data_page.append(' ')
+        # data_page.append(' ')
+        # data_page.append(' ')
         # bh_lat=
 
         # data2
@@ -97,9 +116,13 @@ def transformations2(urls):
             data_page.append('')
             data_page.append('')
 
+            data_page.append(' ')
+            data_page.append(' ')
+
+
         # pv_lon=
-        data_page.append(' ')
-        data_page.append(' ')
+        # data_page.append(' ')
+        # data_page.append(' ')
         # pv_lat=
 
         try:
@@ -119,6 +142,7 @@ def transformations2(urls):
             data_page.append(' ')
 
         # lon
+
         data_page.append(' ')
         data_page.append(' ')
         # lat
@@ -207,4 +231,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

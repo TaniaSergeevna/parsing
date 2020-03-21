@@ -113,6 +113,7 @@ def main():
         EC.presence_of_element_located((By.CLASS_NAME, "list-row"))
     )
     pagination(driver)
+
     date = ((datetime.date.today() + datetime.timedelta(days=-14)).strftime("%d.%m.%Y"))
     data_first, hrefs, count = data_first_page(date, driver)
 
