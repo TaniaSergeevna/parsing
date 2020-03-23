@@ -45,10 +45,13 @@ def add_date(string):
     bh_name = str(replaces(string))
     data_page.append(bh_name[:bh_name.find('   ')])
     bh_adress = bh_name[bh_name.find('   ') + 3:].replace('   ', ',')
-    data_page.append(bh_adress)
+
 
     if bh_adress.count(',') == 2:
         bh_adress = (str(bh_adress[bh_adress.find(',') + 1:]))
+        data_page.append(bh_adress)
+    else:
+        data_page.append(bh_adress)
 
     bh_street = str(bh_adress[:bh_adress.find(',')]).strip()
     data_page.append(bh_street[:bh_street.rfind(' ')])
