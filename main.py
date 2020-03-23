@@ -46,7 +46,6 @@ def add_date(string):
     data_page.append(bh_name[:bh_name.find('   ')])
     bh_adress = bh_name[bh_name.find('   ') + 3:].replace('   ', ',')
 
-
     if bh_adress.count(',') == 2:
         bh_adress = (str(bh_adress[bh_adress.find(',') + 1:]))
         data_page.append(bh_adress)
@@ -97,11 +96,23 @@ def transformations2(urls):
 
         try:
             data_page.append(replaces(datas[3]['fields'][0]['value']['defaultValue']))
+
         except:
             data_page.append(' ')
 
         try:
-            data_page.append(replaces(datas[3]['fields'][2]['value']['defaultValue']))
+            if str(replaces(datas[3]['fields'][2]['value']['defaultValue'])).isdigit():
+                data_page.append(replaces(datas[3]['fields'][2]['value']['defaultValue']))
+            else:
+                data = str(replaces(datas[3]['fields'][2]['value']['defaultValue'])).replace(',', '').split(' ')
+                sum = ''
+                for i in data:
+                    if i.isdigit() and i.isalnum():
+                        sum += i
+                        sum += ', '
+
+                data_page.append(sum[:len(sum) - 1])
+
         except:
             data_page.append(' ')
 
