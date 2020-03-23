@@ -71,7 +71,7 @@ def add_date(string):
 
 def transformations2(urls):
     data_pages = []
-    n  = 0
+
     for url in urls:
         data_page = []
         datas = get_html(url)['fields']
@@ -104,7 +104,6 @@ def transformations2(urls):
         try:
             if str(replaces(datas[3]['fields'][2]['value']['defaultValue'])).isdigit():
                 data_page.append(replaces(datas[3]['fields'][2]['value']['defaultValue']))
-                n+=1
             else:
                 data = str(replaces(datas[3]['fields'][2]['value']['defaultValue'])).replace(',', '').split(' ')
                 sum = ''
@@ -113,15 +112,10 @@ def transformations2(urls):
                         sum += i
                         sum += ', '
 
-
-                data_page.append(sum[:len(sum) - 1])
-                n+=1
-
+                data_page.append(sum[:len(sum) - 2])
 
         except:
             data_page.append(' ')
-            n+=1
-        print(n)
 
         try:
             data_page.append(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
