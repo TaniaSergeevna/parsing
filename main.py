@@ -23,9 +23,9 @@ def add_href(url, date):
         if (date_1 - date_2).days <= 14 and (date_1 - date_2).days >= 0:
             href.append('https://amtsblatt.be.ch/api/v1/publications/{0}'.format(a['id']))
             href_view.append('https://amtsblatt.be.ch/api/v1/publications/{0}/view'.format(a['id']))
-    data = transformations2(href_view)
+    data, contents = transformations2(href_view)
 
-    return href, data
+    return href, data, contents
 
 
 def replaces(string):
@@ -71,6 +71,7 @@ def add_date(string):
 
 def transformations2(urls):
     data_pages = []
+    contents_all = []
 
     for url in urls:
         data_page = []
@@ -95,8 +96,26 @@ def transformations2(urls):
             data_page.append(' ')
             data_page.append(' ')
 
+        # 'Angaben zum Projekt '
+        contents = []
+        dat = get_html(url)['fields'][0]['fields'][0]['fields'][0]['value']['defaultValue']
+
+        contents.append(replaces(dat))
+        try:
+            contents.append('Bauherrschaft:{0} '.format(
+                replaces(str(get_html(url)['fields'][1]['fields'][0]['fields'][0]['value']['defaultValue']))))
+            contents.append(
+                replaces(str(get_html(url)['fields'][1]['fields'][0]['fields'][1]['value']['defaultValue'])))
+        except:
+            s = ''
+        try:
+            contents.append('Projektverfasser :{0}'.format(
+                replaces(get_html(url)['fields'][2]['fields'][0]['fields'][0]['value']['defaultValue'])))
+        except:
+            s = ''
         try:
             data_page.append(replaces(datas[3]['fields'][0]['value']['defaultValue']))
+            contents.append('Angaben zum Projekt {0}'.format(replaces(datas[3]['fields'][0]['value']['defaultValue'])))
 
         except:
             data_page.append(' ')
@@ -104,6 +123,8 @@ def transformations2(urls):
         try:
             if str(replaces(datas[3]['fields'][2]['value']['defaultValue'])).isdigit():
                 data_page.append(replaces(datas[3]['fields'][2]['value']['defaultValue']))
+                contents.append(replaces(datas[3]['fields'][2]['value']['defaultValue']))
+
             else:
                 data = str(replaces(datas[3]['fields'][2]['value']['defaultValue'])).replace(',', '').split(' ')
                 sum = ''
@@ -113,6 +134,7 @@ def transformations2(urls):
                         sum += ', '
 
                 data_page.append(sum[:len(sum) - 2])
+                contents.append(sum[:len(sum) - 2])
 
         except:
             data_page.append(' ')
@@ -120,6 +142,8 @@ def transformations2(urls):
         try:
             data_page.append(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
                              :str(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])).find(',')])
+            contents.append(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])[
+                            :str(replaces(datas[3]['fields'][1]['fields'][0]['value']['defaultValue'])).find(',')])
         except:
             data_page.append(' ')
 
@@ -149,8 +173,9 @@ def transformations2(urls):
         data_page.append('  ')
 
         data_pages.append(data_page)
+        contents_all.append(contents)
 
-    return data_pages
+    return data_pages, contents_all
 
 
 def content(string):
@@ -167,7 +192,7 @@ def municipality(string):
     return string
 
 
-def transformations(urls, data):
+def transformations(urls, data, contents):
     data_pages = []
     i = 0
     for url in urls:
@@ -179,7 +204,10 @@ def transformations(urls, data):
 
         data_page.append(str(datas['publicationDate'][:10]).replace('-', '/'))
         data_page.append('Baupublikation')
-        data_page.append('Betrifft:{0}'.format(content(datas['title']['de'])))
+        s = ''
+        for l in contents[i]:
+            s += l
+        data_page.append(s)
         data_page.append(municipality(datas['registrationOffice']['displayName']))
         data_page.append((datas['publicationNumber']))
         for j in data[i]:
@@ -211,13 +239,13 @@ def main():
     data = []
     # pagination
     for page in range(number_page):
-        url, datas = add_href(
+        url, datas, contents = add_href(
             get_html(
                 'https://amtsblatt.be.ch/api/v1/publications?allowRubricSelection=true&includeContent=false&pageRequest.'
                 'page={0}&pageRequest.size=100&publicationStates=PUBLISHED&publicationStates=CANCELLED&rubrics=BP-'
                 'BE&subRubrics=BP-BE10&subRubrics=BP-BE20&tenant=kabbe'.format(page)),
             date)
-        data.append(transformations(url, datas))
+        data.append(transformations(url, datas, contents))
 
     add_csv(data)
 
