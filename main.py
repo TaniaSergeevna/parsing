@@ -48,37 +48,21 @@ def add_date(string):
     data_page.append(bh_adress)
 
     if bh_adress.count(',') == 2:
-        bh_street = str(bh_adress[bh_adress.find(',') + 1:])[
-                    :str(bh_adress[bh_adress.find(',') + 1:]).find(',')].strip()
-        data_page.append(bh_street[:bh_street.rfind(' ')])
-        data_page.append(bh_street[bh_street.rfind(' '):])
-        bh_place = str(bh_adress[bh_adress.find(',') + 1:])[
-                   str(bh_adress[bh_adress.find(',') + 1:]).find(',') + 1:].strip()
-        data_page.append(bh_place[bh_place.find(' ') + 1:])
+        bh_adress = (str(bh_adress[bh_adress.find(',') + 1:]))
 
-        data_page.append(bh_place[:bh_place.find(' ')])
+    bh_street = str(bh_adress[:bh_adress.find(',')]).strip()
+    data_page.append(bh_street[:bh_street.rfind(' ')])
+    data_page.append(bh_street[bh_street.rfind(' '):])
+    bh_place = str(bh_adress[bh_adress.find(',') + 1:])[
+               str(bh_adress[bh_adress.find(',') + 1:]).find(',') + 1:].strip()
+    data_page.append(bh_place[bh_place.find(' ') + 1:])
+    data_page.append(bh_place[:bh_place.find(' ')])
 
-        geolocator = Nominatim()
-        loc = geolocator.geocode(bh_place[bh_place.find(' ') + 1:])
+    geolocator = Nominatim()
+    loc = geolocator.geocode(bh_place[bh_place.find(' ') + 1:])
 
-        data_page.append(loc.longitude)
-        data_page.append(loc.latitude)
-
-    else:
-        bh_street = str(bh_adress[:bh_adress.find(',')]).strip()
-
-        data_page.append(bh_street[:bh_street.rfind(' ')])
-        data_page.append(bh_street[bh_street.rfind(' '):])
-        bh_place = str(bh_adress[bh_adress.find(',') + 1:])[
-                   str(bh_adress[bh_adress.find(',') + 1:]).find(',') + 1:].strip()
-        data_page.append(bh_place[bh_place.find(' ') + 1:])
-        data_page.append(bh_place[:bh_place.find(' ')])
-
-        geolocator = Nominatim()
-        loc = geolocator.geocode(bh_place[bh_place.find(' ') + 1:])
-
-        data_page.append(loc.longitude)
-        data_page.append(loc.latitude)
+    data_page.append(loc.longitude)
+    data_page.append(loc.latitude)
 
     return data_page
 
