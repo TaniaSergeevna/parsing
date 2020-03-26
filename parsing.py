@@ -33,9 +33,8 @@ def parser_pdf(data, key, file):
     data_all.append(data[key])  # url
     data_all.append(str(file['metadata']['date'])[:10].replace('-', '/'))
 
-    data_all.append(file['content'].replace('\n', ''))  # content
+    data_all.append(file['content'][:500].replace('\n', ''))  # content
     return data_all
-
 
 def tika_pdf(data):
     data_all = []
