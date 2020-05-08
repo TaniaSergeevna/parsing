@@ -1,4 +1,4 @@
 # Project exclude paths
 /venv/
 /example2.csv/
-/main.py/
+/parsing_requests.py/
