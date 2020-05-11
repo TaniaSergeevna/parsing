@@ -38,9 +38,8 @@ def parsing_html(response):
 #     return data
 
 def data_refactoring(data, n, l):
-    # datas = []
+    datas = ''
     for i in data:
-        print(i)
         if i != '':
             datas = (i.replace(n, '').replace(l, ''))
         else:
